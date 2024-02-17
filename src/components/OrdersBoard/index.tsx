@@ -18,9 +18,18 @@ const OrdersBoard: React.FC<OrdersBoardProps> = ({ icon, title, orders }) => {
     setSelectedOrder(order);
   };
 
+  const handleCloseModal = () => {
+    setIsModalVisible(true);
+    setSelectedOrder(null);
+  };
+
   return (
     <Board>
-      <OrderModal visible={isModalVisible} order={selectedOrder} />
+      <OrderModal
+        visible={isModalVisible}
+        order={selectedOrder}
+        onClose={handleCloseModal}
+      />
 
       <header>
         <span>{icon}</span>

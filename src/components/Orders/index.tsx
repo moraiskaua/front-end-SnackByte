@@ -6,33 +6,26 @@ interface OrderProps {}
 
 const orders: OrderType[] = [
   {
-    _id: '123',
-    status: 'IN_PRODUCTION',
-    table: '4',
+    _id: 'hdfgwqd',
+    status: 'WAITING',
+    table: '3',
     products: [
       {
-        _id: 'string',
+        _id: 'fasdfasdgfds',
         quantity: 2,
         product: {
-          name: 'um',
-          imagePath: 'fasd.png',
+          name: 'Hamburguer de carne',
+          imagePath: '1708134857037-burger-molho-especial.png',
           price: 20,
         },
       },
-    ],
-  },
-  {
-    _id: '412',
-    status: 'DONE',
-    table: '2',
-    products: [
       {
-        _id: 'string',
-        quantity: 2,
+        _id: 'd2fdsgfds',
+        quantity: 1,
         product: {
-          name: 'um',
-          imagePath: 'fasd.png',
-          price: 20,
+          name: 'Hamburguer de frango',
+          imagePath: '1708134857037-burger-molho-especial.png',
+          price: 18,
         },
       },
     ],
