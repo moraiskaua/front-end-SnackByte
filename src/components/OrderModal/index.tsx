@@ -61,8 +61,8 @@ const OrderModal: React.FC<OrderModalProps> = ({
               <div className="item" key={_id}>
                 <img
                   src={`http://localhost:8080/uploads/${product.imagePath}`}
-                  width="56"
-                  height="28.51"
+                  width="48"
+                  height="48"
                   alt={product.name}
                 />
 
