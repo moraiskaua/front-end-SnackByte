@@ -1,43 +1,46 @@
+import { useEffect, useState } from 'react';
 import { OrderType } from '../../types/Order';
 import OrdersBoard from '../OrdersBoard';
 import { Container } from './styles';
+import { api } from '../../utils/api';
 
 interface OrderProps {}
 
-const orders: OrderType[] = [
-  {
-    _id: 'hdfgwqd',
-    status: 'WAITING',
-    table: '3',
-    products: [
-      {
-        _id: 'fasdfasdgfds',
-        quantity: 2,
-        product: {
-          name: 'Hamburguer de carne',
-          imagePath: '1708134857037-burger-molho-especial.png',
-          price: 20,
-        },
-      },
-      {
-        _id: 'd2fdsgfds',
-        quantity: 1,
-        product: {
-          name: 'Hamburguer de frango',
-          imagePath: '1708134857037-burger-molho-especial.png',
-          price: 18,
-        },
-      },
-    ],
-  },
-];
-
 const Order: React.FC<OrderProps> = ({}) => {
+  const [orders, setOrders] = useState<OrderType[]>([]);
+
+  useEffect(() => {
+    api.get('/orders').then(({ data }) => setOrders(data));
+  }, []);
+
+  const waiting = orders.filter(order => order.status === 'WAITING');
+  const production = orders.filter(order => order.status === 'IN_PRODUCTION');
+  const done = orders.filter(order => order.status === 'DONE');
+
+  const handleCancelOrder = (orderId: string) => {
+    setOrders(prev => prev.filter(order => order._id !== orderId));
+  };
+
   return (
     <Container>
-      <OrdersBoard icon="🕒" title="Fila de espera" orders={orders} />
-      <OrdersBoard icon="👨‍🍳" title="Em preparação" orders={[]} />
-      <OrdersBoard icon="✅" title="Pronto!" orders={[]} />
+      <OrdersBoard
+        icon="🕒"
+        title="Fila de espera"
+        orders={waiting}
+        onCancelOrder={handleCancelOrder}
+      />
+      <OrdersBoard
+        icon="👨‍🍳"
+        title="Em preparação"
+        orders={production}
+        onCancelOrder={handleCancelOrder}
+      />
+      <OrdersBoard
+        icon="✅"
+        title="Pronto!"
+        orders={done}
+        onCancelOrder={handleCancelOrder}
+      />
     </Container>
   );
 };
