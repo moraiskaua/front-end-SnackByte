@@ -3,11 +3,22 @@ import { OrderType } from '../../types/Order';
 import OrdersBoard from '../OrdersBoard';
 import { Container } from './styles';
 import { api } from '../../utils/api';
+import socketIo from 'socket.io-client';
 
 interface OrderProps {}
 
 const Order: React.FC<OrderProps> = ({}) => {
   const [orders, setOrders] = useState<OrderType[]>([]);
+
+  useEffect(() => {
+    const socket = socketIo(import.meta.env.VITE_PUBLIC_API_URL, {
+      transports: ['websocket'],
+    });
+
+    socket.on('orders-new', newOrder =>
+      setOrders(prev => prev.concat(newOrder)),
+    );
+  }, []);
 
   useEffect(() => {
     api.get('/orders').then(({ data }) => setOrders(data));
