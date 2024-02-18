@@ -9,6 +9,7 @@ interface OrderModalProps {
   isLoading: boolean;
   onClose: () => void;
   onCancelOrder: () => Promise<void>;
+  onChangeOrderStatus: () => void;
 }
 
 const OrderModal: React.FC<OrderModalProps> = ({
@@ -17,6 +18,7 @@ const OrderModal: React.FC<OrderModalProps> = ({
   isLoading,
   onClose,
   onCancelOrder,
+  onChangeOrderStatus,
 }) => {
   if (!visible || !order) return null;
 
@@ -81,17 +83,30 @@ const OrderModal: React.FC<OrderModalProps> = ({
         </OrderDetails>
 
         <Actions>
-          <button type="button" className="primary" disabled={isLoading}>
-            <span>👨‍🍳</span>
-            <strong>Iniciar Produção</strong>
-          </button>
+          {order.status !== 'DONE' && (
+            <button
+              type="button"
+              className="primary"
+              disabled={isLoading}
+              onClick={onChangeOrderStatus}
+            >
+              <span>
+                {order.status === 'WAITING' && '👨‍🍳'}
+                {order.status === 'IN_PRODUCTION' && '✅'}
+              </span>
+              <strong>
+                {order.status === 'WAITING' && 'Iniciar Produção'}
+                {order.status === 'IN_PRODUCTION' && 'Concluir Pedido'}
+              </strong>
+            </button>
+          )}
+
           <button
             type="button"
             className="secondary"
             disabled={isLoading}
             onClick={onCancelOrder}
           >
-            <span>👨‍🍳</span>
             <strong>Cancelar Pedido</strong>
           </button>
         </Actions>

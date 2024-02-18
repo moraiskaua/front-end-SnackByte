@@ -21,6 +21,15 @@ const Order: React.FC<OrderProps> = ({}) => {
     setOrders(prev => prev.filter(order => order._id !== orderId));
   };
 
+  const handleChangeOrderStatus = (
+    orderId: string,
+    status: OrderType['status'],
+  ) => {
+    setOrders(prev =>
+      prev.map(order => (order._id === orderId ? { ...order, status } : order)),
+    );
+  };
+
   return (
     <Container>
       <OrdersBoard
@@ -28,18 +37,21 @@ const Order: React.FC<OrderProps> = ({}) => {
         title="Fila de espera"
         orders={waiting}
         onCancelOrder={handleCancelOrder}
+        onChangeOrderStatus={handleChangeOrderStatus}
       />
       <OrdersBoard
         icon="👨‍🍳"
         title="Em preparação"
         orders={production}
         onCancelOrder={handleCancelOrder}
+        onChangeOrderStatus={handleChangeOrderStatus}
       />
       <OrdersBoard
         icon="✅"
         title="Pronto!"
         orders={done}
         onCancelOrder={handleCancelOrder}
+        onChangeOrderStatus={handleChangeOrderStatus}
       />
     </Container>
   );

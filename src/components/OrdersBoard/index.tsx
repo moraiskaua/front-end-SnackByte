@@ -10,6 +10,7 @@ interface OrdersBoardProps {
   title: string;
   orders: OrderType[];
   onCancelOrder: (orderId: string) => void;
+  onChangeOrderStatus: (orderId: string, status: OrderType['status']) => void;
 }
 
 const OrdersBoard: React.FC<OrdersBoardProps> = ({
@@ -17,6 +18,7 @@ const OrdersBoard: React.FC<OrdersBoardProps> = ({
   title,
   orders,
   onCancelOrder,
+  onChangeOrderStatus,
 }) => {
   const [selectedOrder, setSelectedOrder] = useState<OrderType | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -32,10 +34,23 @@ const OrdersBoard: React.FC<OrdersBoardProps> = ({
     setSelectedOrder(null);
   };
 
+  const handleChangeOrderStatus = () => {
+    setIsLoading(true);
+    const status =
+      selectedOrder?.status === 'WAITING' ? 'IN_PRODUCTION' : 'DONE';
+    api.patch(`/orders/${selectedOrder?._id}`, { status });
+    onChangeOrderStatus(selectedOrder!._id, status);
+    toast.success(
+      `O pedido da mesa ${selectedOrder?.table} teve o status alterado!`,
+    );
+    setIsLoading(false);
+    setIsModalVisible(false);
+  };
+
   const handleCancelOrder = async () => {
     setIsLoading(true);
     await api.delete(`/orders/${selectedOrder?._id}`);
-    toast.success(`O pedido da mesa ${selectedOrder?.table} foi cancelado`);
+    toast.success(`O pedido da mesa ${selectedOrder?.table} foi cancelado!`);
     onCancelOrder(selectedOrder!._id);
     setIsLoading(false);
     setIsModalVisible(false);
@@ -49,6 +64,7 @@ const OrdersBoard: React.FC<OrdersBoardProps> = ({
         isLoading={isLoading}
         onClose={handleCloseModal}
         onCancelOrder={handleCancelOrder}
+        onChangeOrderStatus={handleChangeOrderStatus}
       />
 
       <header>
