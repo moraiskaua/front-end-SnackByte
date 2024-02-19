@@ -3,7 +3,7 @@ import { OrderType } from '../../types/Order';
 import OrdersBoard from '../OrdersBoard';
 import { Container } from './styles';
 import { api } from '../../utils/api';
-import socketIo from 'socket.io-client';
+import Pusher from 'pusher-js';
 
 interface OrderProps {}
 
@@ -11,13 +11,22 @@ const Order: React.FC<OrderProps> = ({}) => {
   const [orders, setOrders] = useState<OrderType[]>([]);
 
   useEffect(() => {
-    const socket = socketIo(import.meta.env.VITE_PUBLIC_API_URL, {
-      transports: ['websocket'],
-    });
+    const pusher = new Pusher(
+      import.meta.env.VITE_PUBLIC_PUSHER_KEY as string,
+      {
+        cluster: import.meta.env.VITE_PUBLIC_CLUSTER as string,
+      },
+    );
+    const channel = pusher.subscribe('snackbyte@websocket');
 
-    socket.on('orders-new', newOrder =>
+    channel.bind('orders-new', (newOrder: OrderType) =>
       setOrders(prev => prev.concat(newOrder)),
     );
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
