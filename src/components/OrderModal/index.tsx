@@ -60,7 +60,9 @@ const OrderModal: React.FC<OrderModalProps> = ({
             {order.products.map(({ _id, product, quantity }) => (
               <div className="item" key={_id}>
                 <img
-                  src={`http://localhost:8080/uploads/${product.imagePath}`}
+                  src={`${import.meta.env.VITE_PUBLIC_API_URL}/uploads/${
+                    product.imagePath
+                  }`}
                   width="48"
                   height="48"
                   alt={product.name}
